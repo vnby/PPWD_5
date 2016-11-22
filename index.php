@@ -99,7 +99,7 @@ session_start();
 	function selectAllFromTable($table) {
 		$conn = connectDB();
 		
-		$sql = "SELECT id, nama_paket, tujuan, fitur, harga FROM $table";
+		$sql = "SELECT book_id, img_path, title, author, publisher, description, quantity FROM $table";
 		
 		if(!$result = mysqli_query($conn, $sql)) {
 			die("Error: $sql");
@@ -153,5 +153,35 @@ session_start();
       </ul>
     </div>
   </nav>
+
+  <div class="table-responsive">
+				<table class='table'>
+					<thead> <tr> <th>ID</th> <th>Preview Cover</th> <th>Title</th> <th>Author</th> <th>Publisher</th> <th>Description</th> <th>Quantity</th> </tr> </thead>
+					<tbody>
+						<?php
+							$books = selectAllFromTable("book");
+							while ($row = mysqli_fetch_row($books)) {
+								echo "<tr>";
+								foreach($row as $key => $value) {
+									echo "<td>$value</td>";
+								}
+								echo '<td>
+								<button type="button" class="btn btn-default" data-toggle="modal" data-target="#updateModal" onclick="setUpdateData(\''.$row[0].'\',\''.$row[1].'\',\''.$row[2].'\',\''.$row[3].'\',\''.$row[4].'\')">
+								Edit
+								</button>
+								</td>';
+								echo '<td>
+								<form action="index.php" method="post">
+									<input type="hidden" id="delete-userid" name="userid" value="'.$row[0].'">
+									<input type="hidden" id="delete-command" name="command" value="delete">
+									<button type="submit" class="btn btn-danger">Delete</button>
+								</form>
+								</td>';
+								echo "</tr>";
+							}
+						?>
+					</tbody>
+				</table>
+
 </body>
 </html>
