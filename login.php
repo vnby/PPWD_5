@@ -25,16 +25,28 @@
         $myusername = mysqli_real_escape_string($db,$_POST['username']);
         $mypassword = mysqli_real_escape_string($db,$_POST['password']); 
         
-        $sql = "SELECT user_id FROM user WHERE username='$myusername' and password='$mypassword' and role='admin'";
-        $result = mysqli_query($db,$sql);
-        $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+        //admin side
+        $sql1 = "SELECT user_id FROM user WHERE username='$myusername' and password='$mypassword' AND role='admin'";
+        $result1 = mysqli_query($db,$sql1);
+        $row1 = mysqli_fetch_array($result1,MYSQLI_ASSOC);
+        $count1 = mysqli_num_rows($result1);
 
-        $count = mysqli_num_rows($result);
+        //user side
+        $sql2 = "SELECT user_id FROM user WHERE username='$myusername' and password='$mypassword' AND role='user'";
+        $result2 = mysqli_query($db,$sql2);
+        $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
+        $count2 = mysqli_num_rows($result2);
 
         // If result matched $myusername and $mypassword, table row must be 1 row
 
-        if($count == 1) {
+        if($count1 == 1) {
             $_SESSION['login_user'] = $myusername;
+            $_SESSION['role'] = "admin";
+
+            header("location: index.php");
+        } else if($count2 == 1) {
+            $_SESSION['login_user'] = $myusername;
+            $_SESSION['role'] = "user";
 
             header("location: index.php");
         } else {
