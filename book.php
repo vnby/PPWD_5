@@ -65,15 +65,14 @@ function bukuKembali() {
 	mysqli_close($conn);
 }
 
-function memberiReview($book_id, $user_id) {
+function memberiReview($review) {
 	$conn = connectDB();
 
-	$review_id = $_POST['review_id'];
-	$book_id = $_POST['book_id'];
-	$user_id = $_POST['user_id'];
-	$date = $_POST['date'];
-	$content = $_POST['content'];
-	$sql = "INSERT INTO review (book_id, user_id, date, content) VALUES(book_id, user_id, date, content)";
+	$book_id = $_GET['bookid'];
+	$user_id = $_SESSION['user_id'];
+	$dates = CURDATE();
+	$content = $review;
+	$sql = "INSERT INTO review (book_id, user_id, dates, content) VALUES ('$book_id','$user_id', '$dates', '$content')";
 
 	if($result = mysqli_query($conn, $sql)) {
 		echo "Terima kasih telah memberi review:) <br/>";
@@ -108,6 +107,7 @@ function selectAllFromTable($table) {
 	$conn = connectDB();
 
 	$sql = "SELECT book_id, img_path, title, author, publisher, description, quantity FROM $table";
+	
 
 	if(!$result = mysqli_query($conn, $sql)) {
 		die("Error: $sql");
@@ -116,11 +116,38 @@ function selectAllFromTable($table) {
 	return $result;
 }
 
+function selectBookReview($book_id) {
+	$conn = connectDB();
+
+	$sql = "SELECT user_id, date, content FROM review WHERE book_id='$book_id'";
+	
+	if(!$result = mysqli_query($conn, $sql)) {
+		die("Error: $sql");
+	}
+	mysqli_close($conn);
+	return $result;
+}
+
+function getNameFromID($user_id) {
+	$conn = connectDB();
+
+	$sql = "SELECT username FROM user WHERE user_id='$user_id'";
+	$result = mysqli_query($conn, $sql);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$name = $row['username'];
+	
+	if(!$result = mysqli_query($conn, $sql)) {
+		die("Error: $sql");
+	}
+	mysqli_close($conn);
+	return $name;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
-	} else if($_POST['command'] === 'update') {
-		updatePaket($_POST['userid']);
+	} else if($_POST['command'] === 'review') {
+		memberiReview($_POST['textarea1']);
 	} else if($_POST['command'] === 'delete') {
 		deletePaket($_POST['userid']);
 	}
@@ -164,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="badges.html"><i class="material-icons right">library_books</i>Daftar Pinjaman Buku</a></li>
+					<li><a href="badges.html"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
 
 					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
@@ -183,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					//$newquantity = $row['quantity'] - 1;
 
 					echo '
-						<div class="row center">
+						<div class="row">
 							<div class="col s12">
 								<h3>Book Details</h3>
 							</div>
@@ -200,11 +227,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<p><b>Quantity</b>: '.$row['quantity'].'</p>
 								<p><form action="book.php" method="post">
 									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
-										<input type="hidden" id="delete-command" name="command" value="pinjam">
-										<button class="btn waves-effect waves-light" type="submit">Pinjam Buku<i class="material-icons right">library_add</i></button>
+										<input type="hidden" name="command" value="pinjam">
+										<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
 									</form></p>
 							</div>
 						</row>
+						<div class="row">
+							
+						</div>
+						<div class="row">
+							
+						</div>
+
+						<div class="row">
+							<div class="col s12">
+								<div class="row">
+        							<div class="input-field col s12">
+          								<form action="book.php" method="post">
+          									<textarea id="textarea1" class="materialize-textarea"></textarea>
+											<input type="hidden" name="command" value="review">
+          									<button class="btn waves-effect waves-light" type="submit" name="action">Submit Review<i class="material-icons right">send</i>
+ 											</button>
+          								</form>
+          								<label for="textarea1">Give your review about this book...</label>
+       								</div>
+      							</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col s12">
+								<h3>Review</h3>
+								<div class="table-responsive">
+									<table class="table striped centered">
+										<thead>
+											<tr>
+												<th>Reviewer</th>
+												<th>Review Date</th>
+												<th>Review</th>
+											</tr>
+										</thead>
+										<tbody>';
+											$reviews = selectBookReview($book_id);
+											while($row = mysqli_fetch_row($reviews)) {
+												echo "<tr>";
+												$foreachcounter = 0;
+												foreach($row as $key => $value) {
+													$foreachcounter = $foreachcounter + 1;
+													if($foreachcounter == 1) {
+														$username = getNameFromID($value);
+														echo "<td>$username</td>";
+													} else {
+														echo "<td>$value</td>";
+													}
+												}
+												echo "</tr>";
+											}
+											echo '
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
 					';
 				} else {
 					echo "bookid gada";
