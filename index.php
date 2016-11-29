@@ -171,40 +171,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		</nav>
 	</div>
 
-	
-	<div class="row">
-		<div class="col s12">
-			<div class="table-responsive">
-				<table class="table striped centered">
-					<thead> <tr> <th>ID</th> <th>Preview Cover</th> <th>Title</th> <th>Author</th> <th>Publisher</th> <th>Description</th> <th>Quantity</th> </tr> </thead>
-					<tbody>
-						<?php
-						$books = selectAllFromTable("book");
-						while ($row = mysqli_fetch_row($books)) {
-							echo "<tr>";
-							$loopcount = 0;
-							foreach($row as $key => $value) {
-								$loopcount = $loopcount + 1;
-								if($loopcount == 2) {
-									echo "<td><img src='$value' height=150 width=100></td>";
-								} else {
-									echo "<td>$value</td>";
-								}
-							}
-							echo '<td>
-							<form action="index.php" method="post">
-							<input type="hidden" id="delete-userid" name="book_id" value="'.$row[0].'">
-							<input type="hidden" id="delete-command" name="command" value="pinjam">
-							<button type="submit" class="btn btn-danger">Pinjam</button>
-						</form>
-					</td>';
-						
-					echo "</tr>";
+			<?php
+			$books = selectAllFromTable("book");
+			$whilecount = 0;
+			while ($row = mysqli_fetch_row($books)) {
+				$whilecount = $whilecount + 1;
+				echo '<div class="row">';
+				if($whilecount % 4 == 0) {
+					echo 
+					"<div class='col s3'>
+						<div class='card horizontal small'>
+							<div class='card-image'>
+								<img src='".$row['1']."'>
+							</div>
+							<div class='card-stacked'>
+								<div class='card-content'>
+									<p>".$row['2']."</p>
+									<p>---</p>
+									<p>by</p>
+									<p><b>".$row['3']."</b></p>
+								</div>
+								<div class='card-action'>
+									<a href='book.php?bookid=" . $row['0'] . "'>Details</a>
+								</div>
+							</div>
+						</div>
+					</div>";
+					echo '</div>';
+				} else {
+					echo 
+					"<div class='col s3'>
+						<div class='card horizontal small'>
+							<div class='card-image'>
+								<img src='".$row['1']."'>
+							</div>
+							<div class='card-stacked'>
+								<div class='card-content'>
+									<p>".$row['2']."</p>
+									<p>---</p>
+									<p>by</p>
+									<p><b>".$row['3']."</b></p>
+								</div>
+								<div class='card-action'>
+									<a href='book.php?bookid=" . $row['0'] . "'>Details</a>
+								</div>
+							</div>
+						</div>
+					</div>";
 				}
-				?>
-			</tbody>
-		</table>
-	</div>
-</div>
+			}
+			?>
 </body>
 </html>
+
