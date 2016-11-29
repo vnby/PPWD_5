@@ -162,8 +162,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<div class="navbar-fixed">
 		<nav>
 			<div class="nav-wrapper">
-				<a href="#" class="brand-logo">.::Personal Library::.</a>
+				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="badges.html"><i class="material-icons right">view_module</i>Daftar Pinjaman Buku</a></li>
+
 					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
 				</ul>

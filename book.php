@@ -38,7 +38,7 @@ function pinjamBuku($book_id, $user_id) {
 
 	if($result1 = mysqli_query($conn, $sql1) && $result2 = mysqli_query($conn, $sql2) && $result3 = mysqli_query($conn, $sql3)) {
 		echo "Buku berhasil anda pinjam!<br/>";
-		header("Location: index.php");
+		header("Location: book.php?bookid=$book_id");
 	} else {
 		die("Error: $sql3");
 	}
@@ -155,15 +155,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 	
 	<ul id="dropdown1" class="dropdown-content">
-		<li><a href="#">Role: <?php echo $_SESSION['role'] ?></a></li>
+		<li><a class="btn-flat disabled"><?php echo $_SESSION['role'] ?></a></li>
 		<li class="divider"></li>
 		<li><a href="logout.php">Logout</a></li>
 	</ul>
 	<div class="navbar-fixed">
 		<nav>
 			<div class="nav-wrapper">
-				<a href="#" class="brand-logo">.::Personal Library::.</a>
+				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="badges.html"><i class="material-icons right">library_books</i>Daftar Pinjaman Buku</a></li>
+
 					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
 				</ul>
@@ -185,13 +187,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							<div class="col s12">
 								<h3>Book Details</h3>
 							</div>
-						</row>
-						<div class="row center">
-							<div class="col s3">
+						</div>
+						<div class="row">
+							<div class="col s5 m4 l3">
 								<img src='.$row['img_path'].' height=350 width=200>
 							</div>
-							<div class="col s9">
-
+							<div class="col s7 m8 l9">
+								<p><b>Title</b>: '.$row['title'].'</p>
+								<p><b>Author</b>: '.$row['author'].'</p>
+								<p><b>Publisher</b>: '.$row['publisher'].'</p>
+								<p><b>Description</b>: '.$row['description'].'</p>
+								<p><b>Quantity</b>: '.$row['quantity'].'</p>
+								<p><form action="book.php" method="post">
+									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
+										<input type="hidden" id="delete-command" name="command" value="pinjam">
+										<button class="btn waves-effect waves-light" type="submit">Pinjam Buku<i class="material-icons right">library_add</i></button>
+									</form></p>
 							</div>
 						</row>
 					';
