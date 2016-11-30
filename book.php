@@ -5,10 +5,11 @@ if(!isset($_SESSION['login_user'])) {
 	header("Location: login.php");
 }
 function connectDB() {
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "PPWD_5";
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "PPWD_5";
+
 
 		// Create connection
 	$conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -29,11 +30,11 @@ function pinjamBuku($book_id, $user_id) {
 
 	$sql1 = "INSERT INTO loan (book_id, user_id) VALUES ($book_id, $user_id)";
 	$sql2 = "SELECT quantity FROM book WHERE book_id='$book_id'";
-	
+
 	$result2 = mysqli_query($conn, $sql2);
 	$row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
 	$newquantity = $row2['quantity'] - 1;
-	
+
 	$sql3 = "UPDATE book SET quantity = $newquantity WHERE book_id='$book_id'";
 
 	if($result1 = mysqli_query($conn, $sql1) && $result2 = mysqli_query($conn, $sql2) && $result3 = mysqli_query($conn, $sql3)) {
@@ -47,21 +48,20 @@ function pinjamBuku($book_id, $user_id) {
 
 function bukuKembali($book_id, $user_id) {
 	$conn = connectDB();
-		//$book_id = $_POST['book_id'];
+	$loan_id = $_POST['loan_id'];
 	$book_id = $_POST['book_id'];
 	$user_id = $_SESSION['user_id'];
-	$title = $_POST['title'];
-	$author = $_POST['author'];
-	$publisher = $_POST['publisher'];
-	$description = $_POST['description'];
 	$quantity = $_POST['quantity'];
-	$sql1 = "INSERT into book (title, author, publisher, description, quantity) values('$title','$author','$publisher','$description','$quantity')";
+
+	$sql1 = "DELETE FROM loan WHERE loan_id=$loan_id";
+	$result1 = mysqli_query($conn, $sql1);
 	$sql2 = "SELECT quantity FROM book WHERE book_id='$book_id'";
 	$result2 = mysqli_query($conn, $sql2);
 	$row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
+
 	$newquantity = $row2['quantity'] + 1;
 	$sql3 = "UPDATE book SET quantity = $newquantity WHERE book_id='$book_id'";
-	if($result1 = mysqli_query($conn, $sql1) && $result2 = mysqli_query($conn, $sql2) && $result3 = mysqli_query($conn, $sql3)) {
+	if(	$result1 = mysqli_query($conn, $sql1) && $result2 = mysqli_query($conn, $sql2) && $result3 = mysqli_query($conn, $sql3)) {
 		echo "Terima kasih telah mengembalikan buku:) <br/>";
 		header("Location: book.php?bookid=$book_id");
 	} else {
@@ -91,13 +91,16 @@ function memberiReview($review, $book_id) {
 function tambahBuku() {
 	$conn = connectDB();
 
-		//$book_id = $_POST['book_id'];
+	$loan_id = $_POST['loan_id'];
+
+	$book_id = $_POST['book_id'];
+	$img_path = $_POST['img_path'];
 	$title = $_POST['title'];
 	$author = $_POST['author'];
 	$publisher = $_POST['publisher'];
 	$description = $_POST['description'];
 	$quantity = $_POST['quantity'];
-	$sql = "INSERT into book (title, author, publisher, description, quantity) values('$title','$author','$publisher','$description','$quantity')";
+	$sql = "INSERT into book (book_id, img_path, title, author, publisher, description, quantity) values('$book_id','$img_path','$title','$author','$publisher','$description','$quantity')";
 
 	if($result = mysqli_query($conn, $sql)) {
 		echo "Buku berhasil ditambah! <br/>";
@@ -112,7 +115,7 @@ function selectAllFromTable($table) {
 	$conn = connectDB();
 
 	$sql = "SELECT book_id, img_path, title, author, publisher, description, quantity FROM $table";
-	
+
 
 	if(!$result = mysqli_query($conn, $sql)) {
 		die("Error: $sql");
@@ -125,7 +128,7 @@ function selectBookReview($book_id) {
 	$conn = connectDB();
 
 	$sql = "SELECT user_id, date, content FROM review WHERE book_id='$book_id'";
-	
+
 	if(!$result = mysqli_query($conn, $sql)) {
 		die("Error: $sql");
 	}
@@ -140,7 +143,7 @@ function getNameFromID($user_id) {
 	$result = mysqli_query($conn, $sql);
 	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 	$name = $row['username'];
-	
+
 	if(!$result = mysqli_query($conn, $sql)) {
 		die("Error: $sql");
 	}
@@ -154,8 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} else if($_POST['command'] === 'review') {
 		$review = $_POST['reviewtextarea'];
 		memberiReview($review, $_POST['bookid']);
-	} else if($_POST['command'] === 'delete') {
-		deletePaket($_POST['userid']);
+	} else if($_POST['command'] === 'kembali') {
+		bukuKembali($_POST['book_id'], $_SESSION['user_id']);
 	}
 }
 
@@ -168,10 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<title>Personal Library</title>
 	<script src="js/jquery-3.1.0.min.js"> </script>
 	<script src="js/jquery.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/mycv.css" >
+	<!-- <link rel="stylesheet" type="text/css" href="css/mycv.css" > -->
 	<!--no need to change this-->
 
 	<!--Import jQuery before materialize.js-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
 	<script type="text/javascript" src="js/materialize.min.js"></script>
 
@@ -184,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-	
+
 	<ul id="dropdown1" class="dropdown-content">
 		<li><a class="btn-flat disabled">Role:</a></li>
 		<li><a class="btn-flat disabled"><?php echo $_SESSION['role'] ?></a></li>
@@ -196,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="badges.html"><i class="material-icons right">library_books</i>Add New Book</a></li>
+					<li><a href="tambahbuku.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
 					<li><a href="badges.html"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
 
 					<!-- Dropdown Trigger -->
@@ -209,11 +213,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<?php
 				if(isset($_GET['bookid'])) {
 					$book_id = $_GET['bookid'];
+					$user_id = $_SESSION['user_id'];
 					$conn = connectDB();
 					$sql = "SELECT * FROM book WHERE book_id='$book_id'";
+					$sql1 = "SELECT loan_id FROM loan WHERE user_id=$user_id AND book_id=$book_id";
 					$result = mysqli_query($conn, $sql);
+					$result1 = mysqli_query($conn, $sql1);
 					$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+					$row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC);
 					//$newquantity = $row['quantity'] - 1;
+
 
 					echo '
 						<div class="row">
@@ -236,13 +245,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 										<input type="hidden" name="command" value="pinjam">
 										<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
 									</form></p>
+								<p><form action="book.php" method="post">
+									<input type="hidden" name="loan_id" value="'.$row1['loan_id'].'">
+									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
+										<input type="hidden" name="command" value="kembali">
+										<button class="btn waves-effect waves-light" type="submit">Return This Book<i class="material-icons right">library_add</i></button>
+									</form></p>
 							</div>
 						</row>
 						<div class="row">
-							
+
 						</div>
 						<div class="row">
-							
+
 						</div>
 
 						<div class="row">
@@ -297,6 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							</div>
 						</div>
 					';
+					echo $row1['loan_id'];
 				} else {
 					echo "bookid gada";
 				}

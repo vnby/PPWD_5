@@ -20,6 +20,27 @@ function connectDB() {
 	return $conn;
 }
 
+function tambahBuku() {
+	$conn = connectDB();
+
+	$book_id = $_POST['book_id'];
+	$img_path = $_POST['img_path'];
+	$title = $_POST['title'];
+	$author = $_POST['author'];
+	$publisher = $_POST['publisher'];
+	$description = $_POST['description'];
+	$quantity = $_POST['quantity'];
+	$sql = "INSERT into book (book_id, img_path, title, author, publisher, description, quantity) values('$book_id','$img_path','$title','$author','$publisher','$description','$quantity')";
+
+	if($result = mysqli_query($conn, $sql)) {
+		echo "Buku berhasil ditambah! <br/>";
+		header("Location: index.php");
+	} else {
+		die("Error: $sql");
+	}
+	mysqli_close($conn);
+}
+
 function selectAllFromTable($table) {
 	$conn = connectDB();
 
@@ -35,15 +56,14 @@ function selectAllFromTable($table) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
-	} else if($_POST['command'] === 'update') {
-		updatePaket($_POST['userid']);
+	} else if($_POST['command'] === 'tambah') {
+		tambahBuku();
 	} else if($_POST['command'] === 'delete') {
 		deletePaket($_POST['userid']);
 	}
 }
 
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -68,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-	
 	<ul id="dropdown1" class="dropdown-content">
 		<li><a class="btn-flat disabled">Role:</a></li>
 		<li><a class="btn-flat disabled"><?php echo $_SESSION['role'] ?></a></li>
@@ -80,66 +99,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="tambahbuku.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
-					<li><a href="badges.html"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
-
-					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
 				</ul>
 			</div>
 		</nav>
 	</div>
-
-			<?php
-			$books = selectAllFromTable("book");
-			$whilecount = 0;
-			while ($row = mysqli_fetch_row($books)) {
-				$whilecount = $whilecount + 1;
-				echo '<div class="row">';
-				if($whilecount % 4 == 0) {
-					echo 
-					"<div class='col s3'>
-						<div class='card horizontal small'>
-							<div class='card-image'>
-								<img src='".$row['1']."'>
-							</div>
-							<div class='card-stacked'>
-								<div class='card-content'>
-									<p>".$row['2']."</p>
-									<p>---</p>
-									<p>by</p>
-									<p><b>".$row['3']."</b></p>
-								</div>
-								<div class='card-action'>
-									<a href='book.php?bookid=" . $row['0'] . "'>Details</a>
-								</div>
-							</div>
-						</div>
-					</div>";
-					echo '</div>';
-				} else {
-					echo 
-					"<div class='col s3'>
-						<div class='card horizontal small'>
-							<div class='card-image'>
-								<img src='".$row['1']."'>
-							</div>
-							<div class='card-stacked'>
-								<div class='card-content'>
-									<p>".$row['2']."</p>
-									<p>---</p>
-									<p>by</p>
-									<p><b>".$row['3']."</b></p>
-								</div>
-								<div class='card-action'>
-									<a href='book.php?bookid=" . $row['0'] . "'>Details</a>
-								</div>
-							</div>
-						</div>
-					</div>";
-				}
-			}
-			?>
+		<div class="row">
+		<form class="col s6 offset-s3">
+			<div class="row">
+				<div class="input-field col s12">
+					<i class="material-icons prefix">label</i>
+					<label for="book_id">Book ID</label>
+					<input type="text" id="book_id" name="book_id" placeholder="Masukkan ID buku anda">
+				</div>
+				<div class="input-field col s12">
+					<i class="material-icons prefix">perm_media</i>
+					<label for="img_path">Cover Book Preview</label>
+					<input type="text" id="img_path" name="img_path" placeholder="Masukkan url dari gambar cover buku anda">
+				</div>
+				<div class="input-field col s12">
+					<i class="material-icons prefix">book</i>
+					<label for="title">Title</label>
+					<input type="text" name="title" placeholder="Masukkan judul buku anda">
+				</div>
+				<div class="input-field col s12">
+					<i class="material-icons prefix">person_pin</i>
+					<label for="title">Author</label>
+					<input type="text" id="author" name="author" placeholder="Masukkan nama penulis buku">
+				</div>
+				<div class="input-field col s12">
+					<i class="material-icons prefix">class</i>
+					<label for="title">Publisher</label>
+					<input type="text" id="publisher" name="publisher" placeholder="Masukkan penerbit buku anda">
+				</div>
+				<div class="input-field col s12">
+					<i class="material-icons prefix">comment</i>
+					<label for="title">Description</label>
+					<input type="text" id="description" name="description" placeholder="Masukkan deskripsi dari buku anda">
+				</div>
+				<div class="input-field col s12">
+					<i class="material-icons prefix">trending_up</i>
+					<label for="title">Quantity</label>
+					<input type="number" id="quantity" name="quantity" placeholder="Masukkan jumlah buku yang diinginkan">
+				</div>
+			</div>
+			<button type="button" method="post" id="selesaiUpdate" name="save" class="waves-effect waves-teal btn-flat">Tambahkan!</button>
+		</form>
+		</div>
 </body>
 </html>
-
