@@ -47,7 +47,6 @@ function pinjamBuku($book_id, $user_id) {
 
 function bukuKembali($book_id, $user_id) {
 	$conn = connectDB();
-
 		//$book_id = $_POST['book_id'];
 	$book_id = $_POST['book_id'];
 	$user_id = $_SESSION['user_id'];
@@ -58,13 +57,10 @@ function bukuKembali($book_id, $user_id) {
 	$quantity = $_POST['quantity'];
 	$sql1 = "INSERT into book (title, author, publisher, description, quantity) values('$title','$author','$publisher','$description','$quantity')";
 	$sql2 = "SELECT quantity FROM book WHERE book_id='$book_id'";
-
 	$result2 = mysqli_query($conn, $sql2);
 	$row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
 	$newquantity = $row2['quantity'] + 1;
-
 	$sql3 = "UPDATE book SET quantity = $newquantity WHERE book_id='$book_id'";
-
 	if($result1 = mysqli_query($conn, $sql1) && $result2 = mysqli_query($conn, $sql2) && $result3 = mysqli_query($conn, $sql3)) {
 		echo "Terima kasih telah mengembalikan buku:) <br/>";
 		header("Location: book.php?bookid=$book_id");
@@ -156,7 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
 	} else if($_POST['command'] === 'review') {
-		memberiReview("Halo", $_POST['bookid']);
+		$review = $_POST['reviewtextarea'];
+		memberiReview($review, $_POST['bookid']);
 	} else if($_POST['command'] === 'delete') {
 		deletePaket($_POST['userid']);
 	}
@@ -189,6 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 	
 	<ul id="dropdown1" class="dropdown-content">
+		<li><a class="btn-flat disabled">Role:</a></li>
 		<li><a class="btn-flat disabled"><?php echo $_SESSION['role'] ?></a></li>
 		<li class="divider"></li>
 		<li><a href="logout.php">Logout</a></li>
@@ -251,9 +249,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							<div class="col s12">
 								<div class="row">
         							<div class="input-field col s12">
-          								<form action="book.php" method="post" name="reviewform">
-          									<textarea id="textarea1" name="textarea1" form="reviewform" class="materialize-textarea"></textarea>
-          									<label for="textarea1">Give your review about this book...</label>
+        								<h5>Give your review about this book...</h5>
+          								<form action="book.php" method="post" name="reviewform" id="reviewforms">
+          									<textarea id="reviewtextareas" name="reviewtextarea" form="reviewforms"></textarea>
 											<input type="hidden" name="command" value="review">
 											<input type="hidden" name="bookid" value="'.$row['book_id'].'">
           									<button class="btn waves-effect waves-light" type="submit" name="action" value="sbmit">Submit Review<i class="material-icons right">send</i>

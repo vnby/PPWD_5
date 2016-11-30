@@ -70,7 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 	
 	<ul id="dropdown1" class="dropdown-content">
-		<li><a href="#">Role: <?php echo $_SESSION['role'] ?></a></li>
+		<li><a class="btn-flat disabled">Role:</a></li>
+		<li><a class="btn-flat disabled"><?php echo $_SESSION['role'] ?></a></li>
 		<li class="divider"></li>
 		<li><a href="logout.php">Logout</a></li>
 	</ul>
