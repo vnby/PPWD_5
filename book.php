@@ -74,18 +74,18 @@ function bukuKembali($book_id, $user_id) {
 	mysqli_close($conn);
 }
 
-function memberiReview($review) {
+function memberiReview($review, $book_id) {
 	$conn = connectDB();
 
-	$book_id = $_GET['bookid'];
+	$book_id = $book_id;
 	$user_id = $_SESSION['user_id'];
-	$dates = CURDATE();
+	$dates = date('Y-m-d');
 	$content = $review;
-	$sql = "INSERT INTO review (book_id, user_id, dates, content) VALUES ('$book_id','$user_id', '$dates', '$content')";
+	$sql = "INSERT INTO review (book_id, user_id, date, content) VALUES ('$book_id','$user_id', '$dates', '$content')";
 
 	if($result = mysqli_query($conn, $sql)) {
 		echo "Terima kasih telah memberi review:) <br/>";
-		header("Location: index.php");
+		header("Location: book.php?bookid=$book_id");
 	} else {
 		die("Error: $sql");
 	}
@@ -156,9 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
 	} else if($_POST['command'] === 'review') {
-		memberiReview($_POST['textarea1']);
-	} else if($_POST['command'] === 'kembali') {
-		bukuKembali($_POST['bookid'], $_SESSION['user_id']);
+		memberiReview("Halo", $_POST['bookid']);
+	} else if($_POST['command'] === 'delete') {
+		deletePaket($_POST['userid']);
 	}
 }
 
@@ -171,9 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<title>Personal Library</title>
 	<script src="js/jquery-3.1.0.min.js"> </script>
 	<script src="js/jquery.js"></script>
-	<!-- <link rel="stylesheet" type="text/css" href="css/mycv.css" > -->
-	<link rel="stylesheet" type="text/css" href="css/normalize.css" > 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css/mycv.css" >
 	<!--no need to change this-->
 
 	<!--Import jQuery before materialize.js-->
@@ -200,6 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="badges.html"><i class="material-icons right">library_books</i>Add New Book</a></li>
 					<li><a href="badges.html"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
 
 					<!-- Dropdown Trigger -->
@@ -239,11 +238,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 										<input type="hidden" name="command" value="pinjam">
 										<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
 									</form></p>
-								<p><form action="book.php" method="post">
-									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
-										<input type="hidden" name="command" value="kembali">
-										<button class="btn waves-effect waves-light" type="submit">Return This Book<i class="material-icons right">library_add</i></button>
-									</form></p>
 							</div>
 						</row>
 						<div class="row">
@@ -257,13 +251,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							<div class="col s12">
 								<div class="row">
         							<div class="input-field col s12">
-          								<form action="book.php" method="post">
-          									<textarea id="textarea1" class="materialize-textarea"></textarea>
+          								<form action="book.php" method="post" name="reviewform">
+          									<textarea id="textarea1" name="textarea1" form="reviewform" class="materialize-textarea"></textarea>
+          									<label for="textarea1">Give your review about this book...</label>
 											<input type="hidden" name="command" value="review">
-          									<button class="btn waves-effect waves-light" type="submit" name="action">Submit Review<i class="material-icons right">send</i>
+											<input type="hidden" name="bookid" value="'.$row['book_id'].'">
+          									<button class="btn waves-effect waves-light" type="submit" name="action" value="sbmit">Submit Review<i class="material-icons right">send</i>
  											</button>
           								</form>
-          								<label for="textarea1">Give your review about this book...</label>
        								</div>
       							</div>
 							</div>

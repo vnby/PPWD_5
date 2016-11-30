@@ -136,8 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<script src="js/jquery-3.1.0.min.js"> </script>
 	<script src="js/jquery.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/mycv.css" >
-	<link rel="stylesheet" type="text/css" href="css/normalize.css" > 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	
 	<!--no need to change this-->
 
 	<!--Import jQuery before materialize.js-->
@@ -164,6 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="badges.html"><i class="material-icons right">library_books</i>Add New Book</a></li>
 					<li><a href="badges.html"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
 
 					<!-- Dropdown Trigger -->
