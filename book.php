@@ -249,9 +249,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							<div class="col s12">
 								<div class="row">
         							<div class="input-field col s12">
-        								<h5>Give your review about this book...</h5>
           								<form action="book.php" method="post" name="reviewform" id="reviewforms">
-          									<textarea id="reviewtextareas" name="reviewtextarea" form="reviewforms"></textarea>
+          									<textarea class="materialize-textarea" id="reviewtextareas" name="reviewtextarea" form="reviewforms"></textarea>
+          									<label for="textarea1">Give your review about this book...</label>
 											<input type="hidden" name="command" value="review">
 											<input type="hidden" name="bookid" value="'.$row['book_id'].'">
           									<button class="btn waves-effect waves-light" type="submit" name="action" value="sbmit">Submit Review<i class="material-icons right">send</i>
