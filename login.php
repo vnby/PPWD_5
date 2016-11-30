@@ -89,6 +89,16 @@
         <input type="password" id="password" name="password" placeholder="Password" />
         <button type="submit" id="submit" name="masuk" class="waves-effect waves-teal btn-flat">Login</button>
       </form>
+      <span name="error" class="error col-sm-offset-4 col-sm-4">
+        <?php
+        if(isset($_SESSION['invalid'])) {
+            echo $_SESSION['invalid'];
+            unset($_SESSION['invalid']);
+        } else {
+            unset($_SESSION['invalid']);
+        } 
+        ?>
+    </span>
     </div>
     </body>
   </html>

@@ -45,22 +45,31 @@ function pinjamBuku($book_id, $user_id) {
 	mysqli_close($conn);
 }
 
-function bukuKembali() {
+function bukuKembali($book_id, $user_id) {
 	$conn = connectDB();
 
 		//$book_id = $_POST['book_id'];
+	$book_id = $_POST['book_id'];
+	$user_id = $_SESSION['user_id'];
 	$title = $_POST['title'];
 	$author = $_POST['author'];
 	$publisher = $_POST['publisher'];
 	$description = $_POST['description'];
 	$quantity = $_POST['quantity'];
-	$sql = "INSERT into book (title, author, publisher, description, quantity) values('$title','$author','$publisher','$description','$quantity')";
+	$sql1 = "INSERT into book (title, author, publisher, description, quantity) values('$title','$author','$publisher','$description','$quantity')";
+	$sql2 = "SELECT quantity FROM book WHERE book_id='$book_id'";
 
-	if($result = mysqli_query($conn, $sql)) {
+	$result2 = mysqli_query($conn, $sql2);
+	$row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
+	$newquantity = $row2['quantity'] + 1;
+
+	$sql3 = "UPDATE book SET quantity = $newquantity WHERE book_id='$book_id'";
+
+	if($result1 = mysqli_query($conn, $sql1) && $result2 = mysqli_query($conn, $sql2) && $result3 = mysqli_query($conn, $sql3)) {
 		echo "Terima kasih telah mengembalikan buku:) <br/>";
-		header("Location: index.php");
+		header("Location: book.php?bookid=$book_id");
 	} else {
-		die("Error: $sql");
+		die("Error: $sql3");
 	}
 	mysqli_close($conn);
 }
@@ -148,8 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
 	} else if($_POST['command'] === 'review') {
 		memberiReview($_POST['textarea1']);
-	} else if($_POST['command'] === 'delete') {
-		deletePaket($_POST['userid']);
+	} else if($_POST['command'] === 'kembali') {
+		bukuKembali($_POST['bookid'], $_SESSION['user_id']);
 	}
 }
 
@@ -162,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<title>Personal Library</title>
 	<script src="js/jquery-3.1.0.min.js"> </script>
 	<script src="js/jquery.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/mycv.css" >
+	<!-- <link rel="stylesheet" type="text/css" href="css/mycv.css" > -->
 	<link rel="stylesheet" type="text/css" href="css/normalize.css" > 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<!--no need to change this-->
@@ -229,6 +238,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
 										<input type="hidden" name="command" value="pinjam">
 										<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
+									</form></p>
+								<p><form action="book.php" method="post">
+									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
+										<input type="hidden" name="command" value="kembali">
+										<button class="btn waves-effect waves-light" type="submit">Return This Book<i class="material-icons right">library_add</i></button>
 									</form></p>
 							</div>
 						</row>
