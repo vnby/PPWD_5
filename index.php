@@ -20,90 +20,6 @@ function connectDB() {
 	return $conn;
 }
 
-function pinjamBuku($book_id, $user_id) {
-	$conn = connectDB();
-
-	//$loan_id = $_POST['loan_id'];
-	$book_id = $_POST['book_id'];
-	$user_id = $_SESSION['user_id'];
-
-	$sql1 = "INSERT INTO loan (book_id, user_id) VALUES ($book_id, $user_id)";
-	$sql2 = "SELECT quantity FROM book WHERE book_id='$book_id'";
-	
-	$result2 = mysqli_query($conn, $sql2);
-	$row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
-	$newquantity = $row2['quantity'] - 1;
-	
-	$sql3 = "UPDATE book SET quantity = $newquantity WHERE book_id='$book_id'";
-
-	if($result1 = mysqli_query($conn, $sql1) && $result2 = mysqli_query($conn, $sql2) && $result3 = mysqli_query($conn, $sql3)) {
-		echo "Buku berhasil anda pinjam!<br/>";
-		header("Location: index.php");
-	} else {
-		die("Error: $sql3");
-	}
-	mysqli_close($conn);
-}
-
-function bukuKembali() {
-	$conn = connectDB();
-
-		//$book_id = $_POST['book_id'];
-	$title = $_POST['title'];
-	$author = $_POST['author'];
-	$publisher = $_POST['publisher'];
-	$description = $_POST['description'];
-	$quantity = $_POST['quantity'];
-	$sql = "INSERT into book (title, author, publisher, description, quantity) values('$title','$author','$publisher','$description','$quantity')";
-
-	if($result = mysqli_query($conn, $sql)) {
-		echo "Terima kasih telah mengembalikan buku:) <br/>";
-		header("Location: index.php");
-	} else {
-		die("Error: $sql");
-	}
-	mysqli_close($conn);
-}
-
-function memberiReview($book_id, $user_id) {
-	$conn = connectDB();
-
-	$review_id = $_POST['review_id'];
-	$book_id = $_POST['book_id'];
-	$user_id = $_POST['user_id'];
-	$date = $_POST['date'];
-	$content = $_POST['content'];
-	$sql = "INSERT INTO review (book_id, user_id, date, content) VALUES(book_id, user_id, date, content)";
-
-	if($result = mysqli_query($conn, $sql)) {
-		echo "Terima kasih telah memberi review:) <br/>";
-		header("Location: index.php");
-	} else {
-		die("Error: $sql");
-	}
-	mysqli_close($conn);
-}
-
-function tambahBuku() {
-	$conn = connectDB();
-
-		//$book_id = $_POST['book_id'];
-	$title = $_POST['title'];
-	$author = $_POST['author'];
-	$publisher = $_POST['publisher'];
-	$description = $_POST['description'];
-	$quantity = $_POST['quantity'];
-	$sql = "INSERT into book (title, author, publisher, description, quantity) values('$title','$author','$publisher','$description','$quantity')";
-
-	if($result = mysqli_query($conn, $sql)) {
-		echo "Buku berhasil ditambah! <br/>";
-		header("Location: index.php");
-	} else {
-		die("Error: $sql");
-	}
-	mysqli_close($conn);
-}
-
 function selectAllFromTable($table) {
 	$conn = connectDB();
 
@@ -136,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<script src="js/jquery-3.1.0.min.js"> </script>
 	<script src="js/jquery.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/mycv.css" >
-	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<!--no need to change this-->
 
 	<!--Import jQuery before materialize.js-->
