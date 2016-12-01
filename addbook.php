@@ -39,7 +39,6 @@ function connectDB() {
 
 function tambahBuku() {
 	$conn = connectDB();
-
 	$img_path = $_POST['img_path'];
 	$title = $_POST['title'];
 	$author = $_POST['author'];
@@ -48,9 +47,13 @@ function tambahBuku() {
 	$quantity = $_POST['quantity'];
 	$sql = "INSERT into book (img_path, title, author, publisher, description, quantity) values('$img_path','$title','$author','$publisher','$description','$quantity')";
 
+	$sql2 = "SELECT book_id FROM book ORDER BY book_id DESC LIMIT 1";
+	$result2 = mysqli_query($conn, $sql2);
+	$row1 = mysqli_fetch_row($result2);
+
 	if($result = mysqli_query($conn, $sql)) {
-		echo "Buku berhasil ditambah! <br/>";
-		header("Location: index.php");
+		$bookid = $row1['0'] + 1;
+		header("Location: book.php?bookid=$bookid");
 	} else {
 		die("Error: $sql");
 	}
@@ -142,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<div class="row">
 		</div>
 		<div class="row">
-		<form method="post" action="book.php" class="col s6 offset-s3">
+		<form method="post" action="addbook.php" class="col s6 offset-s3">
 			<div class="row">
 				<div class="input-field col s12">
 					<i class="material-icons prefix">perm_media</i>

@@ -140,6 +140,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 									<p>---</p>
 									<p>by</p>
 									<p><b>".$row['3']."</b></p>
+									<p>---</p>
+									<p>published by</p>
+									<p><b>".$row['4']."</b></p>
+									<p>---</p>
+									<p>qty</p>
+									<p><b>".$row['6']."</b></p>
 								</div>
 								<div class='card-action'>
 									<a href='book.php?bookid=" . $row['0'] . "'>Details</a>
@@ -161,6 +167,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 									<p>---</p>
 									<p>by</p>
 									<p><b>".$row['3']."</b></p>
+									<p>---</p>
+									<p>published by</p>
+									<p><b>".$row['4']."</b></p>
+									<p>---</p>
+									<p>qty</p>
+									<p><b>".$row['6']."</b></p>
 								</div>
 								<div class='card-action'>
 									<a href='book.php?bookid=" . $row['0'] . "'>Details</a>

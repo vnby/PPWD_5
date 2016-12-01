@@ -107,21 +107,21 @@ function memberiReview($review, $book_id) {
 
 function tambahBuku() {
 	$conn = connectDB();
-
-	$loan_id = $_POST['loan_id'];
-
-	$book_id = $_POST['book_id'];
 	$img_path = $_POST['img_path'];
 	$title = $_POST['title'];
 	$author = $_POST['author'];
 	$publisher = $_POST['publisher'];
 	$description = $_POST['description'];
 	$quantity = $_POST['quantity'];
-	$sql = "INSERT into book (book_id, img_path, title, author, publisher, description, quantity) values('$book_id','$img_path','$title','$author','$publisher','$description','$quantity')";
+	$sql = "INSERT into book (img_path, title, author, publisher, description, quantity) values('$img_path','$title','$author','$publisher','$description','$quantity')";
+
+	$sql2 = "SELECT book_id FROM book ORDER BY book_id DESC LIMIT 1";
+	$result2 = mysqli_query($conn, $sql2);
+	$row1 = mysqli_fetch_row($result2);
 
 	if($result = mysqli_query($conn, $sql)) {
-		echo "Buku berhasil ditambah! <br/>";
-		header("Location: index.php");
+		$bookid = $row1['0'] + 1;
+		header("Location: book.php?bookid=$bookid");
 	} else {
 		die("Error: $sql");
 	}
@@ -218,12 +218,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper teal lighten-1">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
+					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>
 					<?php
-					if($_SESSION['role'] == 'admin')
-						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
-
-					echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
-					
 						$borrowed = getBorrowedTotal();
 						if($borrowed == 0) {
 							echo '(no book borrowed)';
@@ -270,15 +267,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<p><b>Publisher</b>: '.$row['publisher'].'</p>
 								<p><b>Description</b>: '.$row['description'].'</p>
 								<p><b>Quantity</b>: '.$row['quantity'].'</p>';
-								if($row['quantity'] <= 0){
-									echo '<p> Out of Stock </p>';
-								} else{
-									echo '<p><form action="book.php" method="post">
-									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
+								if($_SESSION['role'] == 'user') {
+									if($row['quantity'] <= 0){
+										echo '<p> Out of Stock </p>';
+									} else {
+										echo '<p><form action="book.php" method="post">
+										<input type="hidden" name="book_id" value="'.$row['book_id'].'">
 										<input type="hidden" name="command" value="pinjam">
 										<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
-									</form></p>';	
+										</form></p>';	
+									}
 								}
+								
 								echo '
 							</div>
 						</row>
@@ -287,9 +287,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						</div>
 						<div class="row">
 
-						</div>
+						</div>';
 
-						<div class="row">
+						if($_SESSION['role'] == 'user')
+							echo '<div class="row">
 							<div class="col s12">
 								<div class="row">
         							<div class="input-field col s12">
@@ -304,9 +305,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
        								</div>
       							</div>
 							</div>
-						</div>
+						</div>';
 
-						<div class="row">
+						echo '<div class="row">
 							<div class="col s12">
 								<h3>Review</h3>
 								<div class="table-responsive">
