@@ -159,6 +159,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		memberiReview($review, $_POST['bookid']);
 	} else if($_POST['command'] === 'kembali') {
 		bukuKembali($_POST['book_id'], $_SESSION['user_id']);
+	} else if($_POST['command'] === 'tambah') {
+		tambahBuku();
 	}
 }
 

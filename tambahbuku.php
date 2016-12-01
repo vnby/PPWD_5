@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		</nav>
 	</div>
 		<div class="row">
-		<form class="col s6 offset-s3">
+		<form method="post" action="book.php" class="col s6 offset-s3">
 			<div class="row">
 				<div class="input-field col s12">
 					<i class="material-icons prefix">label</i>
@@ -143,7 +143,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					<input type="number" id="quantity" name="quantity" placeholder="Masukkan jumlah buku yang diinginkan">
 				</div>
 			</div>
-			<button type="button" method="post" id="selesaiUpdate" name="save" class="waves-effect waves-teal btn-flat">Tambahkan!</button>
+			<input type="hidden" name="command" value="tambah">
+			<button type="submit" id="selesaiUpdate" name="save" class="waves-effect waves-teal btn-flat">Tambahkan!</button>
 		</form>
 		</div>
 </body>
