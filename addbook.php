@@ -4,6 +4,23 @@ session_start();
 if(!isset($_SESSION['login_user'])) {
 	header("Location: login.php");
 }
+
+function getBorrowedTotal() {
+	$conn = connectDB();
+	$user_id = $_SESSION['user_id'];
+
+	$sql1 = "SELECT * FROM loan WHERE user_id='$user_id'";
+    $result1 = mysqli_query($conn,$sql1);
+    $row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC);
+    $count1 = mysqli_num_rows($result1);
+	
+	if(!$result = mysqli_query($conn, $sql1)) {
+		die("Error: $sql1");
+	}
+	mysqli_close($conn);
+	return $count1;
+}
+
 function connectDB() {
 	$servername = "localhost";
 	$username = "root";
@@ -94,11 +111,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	</ul>
 	<div class="navbar-fixed">
 		<nav>
-			<div class="nav-wrapper">
+			<div class="nav-wrapper teal lighten-1">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="tambahbuku.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
-					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
+					<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
+					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>
+					<?php
+						$borrowed = getBorrowedTotal();
+						if($borrowed == 0) {
+							echo '(no book borrowed)';
+						} else if(getBorrowedTotal() == 1) {
+							echo $borrowed; echo ' borrowed book';
+						}
+						else {
+							echo $borrowed; echo ' borrowed books';
+						}
+					?></a></li>
 
 					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
