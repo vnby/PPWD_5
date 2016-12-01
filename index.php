@@ -97,9 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper teal lighten-1">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
-					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>
 					<?php
+					if($_SESSION['role'] == 'admin')
+						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
+
+					echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
+					
 						$borrowed = getBorrowedTotal();
 						if($borrowed == 0) {
 							echo '(no book borrowed)';
