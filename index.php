@@ -80,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="tambahbuku.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
-					<li><a href="listbuku.php"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
+					<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
+					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
 
 					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>

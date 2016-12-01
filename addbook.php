@@ -23,14 +23,13 @@ function connectDB() {
 function tambahBuku() {
 	$conn = connectDB();
 
-	$book_id = $_POST['book_id'];
 	$img_path = $_POST['img_path'];
 	$title = $_POST['title'];
 	$author = $_POST['author'];
 	$publisher = $_POST['publisher'];
 	$description = $_POST['description'];
 	$quantity = $_POST['quantity'];
-	$sql = "INSERT into book (book_id, img_path, title, author, publisher, description, quantity) values('$book_id','$img_path','$title','$author','$publisher','$description','$quantity')";
+	$sql = "INSERT into book (img_path, title, author, publisher, description, quantity) values('$img_path','$title','$author','$publisher','$description','$quantity')";
 
 	if($result = mysqli_query($conn, $sql)) {
 		echo "Buku berhasil ditambah! <br/>";
@@ -99,53 +98,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="tambahbuku.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
+					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
+
+					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
 				</ul>
 			</div>
 		</nav>
 	</div>
+
+		<div class="container">
+		<div class="row">
+		</div>
 		<div class="row">
 		<form method="post" action="book.php" class="col s6 offset-s3">
 			<div class="row">
 				<div class="input-field col s12">
-					<i class="material-icons prefix">label</i>
-					<label for="book_id">Book ID</label>
-					<input type="text" id="book_id" name="book_id" placeholder="Masukkan ID buku anda">
-				</div>
-				<div class="input-field col s12">
 					<i class="material-icons prefix">perm_media</i>
 					<label for="img_path">Cover Book Preview</label>
-					<input type="text" id="img_path" name="img_path" placeholder="Masukkan url dari gambar cover buku anda">
+					<input type="text" id="img_path" name="img_path" placeholder="Enter the URL of the book cover">
 				</div>
 				<div class="input-field col s12">
 					<i class="material-icons prefix">book</i>
 					<label for="title">Title</label>
-					<input type="text" name="title" placeholder="Masukkan judul buku anda">
+					<input type="text" name="title" placeholder="Enter the book title">
 				</div>
 				<div class="input-field col s12">
 					<i class="material-icons prefix">person_pin</i>
 					<label for="title">Author</label>
-					<input type="text" id="author" name="author" placeholder="Masukkan nama penulis buku">
+					<input type="text" id="author" name="author" placeholder="Enter the book author">
 				</div>
 				<div class="input-field col s12">
 					<i class="material-icons prefix">class</i>
 					<label for="title">Publisher</label>
-					<input type="text" id="publisher" name="publisher" placeholder="Masukkan penerbit buku anda">
+					<input type="text" id="publisher" name="publisher" placeholder="Enter the book publisher">
 				</div>
 				<div class="input-field col s12">
 					<i class="material-icons prefix">comment</i>
 					<label for="title">Description</label>
-					<input type="text" id="description" name="description" placeholder="Masukkan deskripsi dari buku anda">
+					<input type="text" id="description" name="description" placeholder="Enter the book description">
 				</div>
 				<div class="input-field col s12">
 					<i class="material-icons prefix">trending_up</i>
 					<label for="title">Quantity</label>
-					<input type="number" id="quantity" name="quantity" placeholder="Masukkan jumlah buku yang diinginkan">
+					<input type="number" id="quantity" name="quantity" placeholder="Enter the book quantity">
 				</div>
 			</div>
 			<input type="hidden" name="command" value="tambah">
-			<button type="submit" id="selesaiUpdate" name="save" class="waves-effect waves-teal btn-flat">Tambahkan!</button>
+			<button class="btn waves-effect waves-light" type="submit" id="selesaiUpdate" name="save" class="waves-effect waves-teal btn-flat">ADD BOOK</button>
 		</form>
+		</div>
 		</div>
 </body>
 </html>

@@ -202,8 +202,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="tambahbuku.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
-					<li><a href="listbuku.php"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
+					<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
+					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
 
 					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
@@ -223,8 +223,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					$result1 = mysqli_query($conn, $sql1);
 					$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 					$row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC);
-					//$newquantity = $row['quantity'] - 1;
-
 
 					echo '
 						<div class="row">
@@ -243,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<p><b>Description</b>: '.$row['description'].'</p>
 								<p><b>Quantity</b>: '.$row['quantity'].'</p>';
 								if($row['quantity'] <= 0){
-									echo '<p> Stok Buku Habis! </p>';
+									echo '<p> Out of Stock </p>';
 								} else{
 									echo '<p><form action="book.php" method="post">
 									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
@@ -251,12 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 										<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
 									</form></p>';	
 								}
-								echo '<p><form action="book.php" method="post">
-									<input type="hidden" name="loan_id" value="'.$row1['loan_id'].'">
-									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
-										<input type="hidden" name="command" value="kembali">
-										<button class="btn waves-effect waves-light" type="submit">Return This Book<i class="material-icons right">library_add</i></button>
-									</form></p>
+								echo '
 							</div>
 						</row>
 						<div class="row">
@@ -318,7 +311,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							</div>
 						</div>
 					';
-					echo $row1['loan_id'];
 				} else {
 					echo "bookid gada";
 				}
