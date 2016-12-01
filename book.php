@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
 					<li><a href="tambahbuku.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
-					<li><a href="badges.html"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
+					<li><a href="listbuku.php"><i class="material-icons right">library_books</i>List of Borrowed Book(s)</a></li>
 
 					<!-- Dropdown Trigger -->
 					<li><a class="dropdown-button disable" href="#!" data-activates="dropdown1">Hi, <?php echo $_SESSION['login_user']?><i class="material-icons right">arrow_drop_down</i></a></li>
@@ -241,13 +241,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<p><b>Author</b>: '.$row['author'].'</p>
 								<p><b>Publisher</b>: '.$row['publisher'].'</p>
 								<p><b>Description</b>: '.$row['description'].'</p>
-								<p><b>Quantity</b>: '.$row['quantity'].'</p>
-								<p><form action="book.php" method="post">
+								<p><b>Quantity</b>: '.$row['quantity'].'</p>';
+								if($row['quantity'] <= 0){
+									echo '<p> Stok Buku Habis! </p>';
+								} else{
+									echo '<p><form action="book.php" method="post">
 									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
 										<input type="hidden" name="command" value="pinjam">
 										<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
-									</form></p>
-								<p><form action="book.php" method="post">
+									</form></p>';	
+								}
+								echo '<p><form action="book.php" method="post">
 									<input type="hidden" name="loan_id" value="'.$row1['loan_id'].'">
 									<input type="hidden" name="book_id" value="'.$row['book_id'].'">
 										<input type="hidden" name="command" value="kembali">

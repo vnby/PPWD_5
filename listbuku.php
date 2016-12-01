@@ -4,6 +4,7 @@ session_start();
 if(!isset($_SESSION['login_user'])) {
 	header("Location: login.php");
 }
+
 function connectDB() {
 	$servername = "localhost";
 	$username = "root";
@@ -18,6 +19,20 @@ function connectDB() {
 		die("Connection failed: " + mysqli_connect_error());
 	}
 	return $conn;
+}
+
+function daftarLoan() {
+	$conn = connectDB();
+
+	$user_id = $_SESSION['user_id'];
+	$sql1 = "SELECT book_id, user_id FROM loan WHERE user_id = $user_id";
+
+	if($result = mysqli_query($conn, $sql1)) {
+
+	} else {
+		die("Error: $sql1");
+	}
+	mysqli_close($conn);
 }
 
 function selectAllFromTable($table) {
@@ -35,8 +50,8 @@ function selectAllFromTable($table) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
-	} else if($_POST['command'] === 'update') {
-		updatePaket($_POST['userid']);
+	} else if($_POST['command'] === 'daftar') {
+		daftarLoan();
 	} else if($_POST['command'] === 'delete') {
 		deletePaket($_POST['userid']);
 	}
@@ -89,8 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			</div>
 		</nav>
 	</div>
-
-			<?php
+	<?php
+			
 			$books = selectAllFromTable("book");
 			$whilecount = 0;
 			while ($row = mysqli_fetch_row($books)) {
@@ -142,4 +157,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			?>
 </body>
 </html>
-
