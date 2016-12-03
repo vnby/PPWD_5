@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['login_user'])) {
-	header("Location: login.php");
-}
-
 function getBorrowedTotal() {
 	$conn = connectDB();
 	$user_id = $_SESSION['user_id'];
@@ -218,9 +214,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper teal lighten-1">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>
-					<li><a href="borrowed.php"><i class="material-icons right">library_books</i>
 					<?php
+					if($_SESSION['role'] == 'admin')
+						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
+					if($_SESSION['role'] == 'user') {
+						echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
 						$borrowed = getBorrowedTotal();
 						if($borrowed == 0) {
 							echo '(no book borrowed)';
@@ -230,6 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						else {
 							echo $borrowed; echo ' borrowed books';
 						}
+					}
 					?></a></li>
 
 					<!-- Dropdown Trigger -->
@@ -285,9 +284,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 											<input type="hidden" name="command" value="pinjam">
 											<button class="btn waves-effect waves-light" type="submit">Borrow This Book<i class="material-icons right">library_add</i></button>
 										</form></p>';	
-									} else {
-										echo '<p> Out Of Stock </p>';
-									}
+										} else {
+											echo '<p> Out Of Stock </p>';
+										}
 								}
 							}	
 								echo '
@@ -300,7 +299,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 						</div>';
 
-						if($_SESSION['role'] == 'user')
+						if(!isset($_SESSION['login_user'])) {
+							echo '<div class="row">
+								<div class="col s12">
+									<p>You are not logged in</p>
+								</div>
+								</div>
+							';
+						} else if($_SESSION['role'] == 'user')
 							echo '<div class="row">
 							<div class="col s12">
 								<div class="row">
@@ -354,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						</div>
 					';
 				} else {
-					echo "bookid gada";
+					header("Location: index.php");
 				}
 			 ?>
 	</div>

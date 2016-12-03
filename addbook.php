@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['login_user'])) {
+if(!isset($_SESSION['login_user']) || $_SESSION['role'] == 'user') {
 	header("Location: login.php");
 }
 
@@ -45,15 +45,38 @@ function tambahBuku() {
 	$publisher = $_POST['publisher'];
 	$description = $_POST['description'];
 	$quantity = $_POST['quantity'];
+
+	//cek dulu ada buku yg sama ato ga
+	$sql3 = "SELECT * FROM book WHERE title='$title'";
+    $result3 = mysqli_query($conn,$sql3);
+    $row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC);
+    $count3 = mysqli_num_rows($result3);
+
+    //buat masukin book ke database
 	$sql = "INSERT into book (img_path, title, author, publisher, description, quantity) values('$img_path','$title','$author','$publisher','$description','$quantity')";
 
+	//buat ngambil book id terakhir
 	$sql2 = "SELECT book_id FROM book ORDER BY book_id DESC LIMIT 1";
 	$result2 = mysqli_query($conn, $sql2);
 	$row1 = mysqli_fetch_row($result2);
 
-	if($result = mysqli_query($conn, $sql)) {
-		$bookid = $row1['0'] + 1;
+	if($count3 == 1) { //jumlah elemen di array nya ada 5
+		//ambil qty yang lama
+		$book_id = $row3['book_id'];
+		$sql4 = "SELECT quantity FROM book WHERE book_id='$book_id'";
+		$result4 = mysqli_query($conn, $sql4);
+		$row4 = mysqli_fetch_array($result4, MYSQLI_ASSOC);
+		$newquantity = $row4['quantity'] + $quantity;
+
+		//update qty
+		$sql5 = "UPDATE book SET quantity = $newquantity WHERE book_id='$book_id'";
+		$result5 = mysqli_query($conn, $sql5);
+
+		//ke halaman bukunya
+		$bookid = $row3['book_id'];
 		header("Location: book.php?bookid=$bookid");
+	} else if($result = mysqli_query($conn, $sql)) {
+		$bookid = $row1['0'] + 1;
 	} else {
 		die("Error: $sql");
 	}
@@ -121,7 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					if($_SESSION['role'] == 'admin')
 						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
 
-					echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
+					if($_SESSION['role'] == 'user') {
+						echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
 					
 						$borrowed = getBorrowedTotal();
 						if($borrowed == 0) {
@@ -132,6 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						else {
 							echo $borrowed; echo ' borrowed books';
 						}
+					}
 					?></a></li>
 
 					<!-- Dropdown Trigger -->

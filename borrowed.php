@@ -4,6 +4,11 @@ session_start();
 if(!isset($_SESSION['login_user'])) {
 	header("Location: login.php");
 }
+
+if($_SESSION['role'] == 'admin') {
+	header("Location: index.php");
+}
+
 function connectDB() {
 	$servername = "localhost";
 	$username = "root";
@@ -149,7 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					if($_SESSION['role'] == 'admin')
 						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
 
-					echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
+					if($_SESSION['role'] == 'user') {
+						echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
 					
 						$borrowed = getBorrowedTotal();
 						if($borrowed == 0) {
@@ -160,6 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						else {
 							echo $borrowed; echo ' borrowed books';
 						}
+					}
 					?></a></li>
 
 					<!-- Dropdown Trigger -->
@@ -175,11 +182,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<?php
 				if(getBorrowedTotal() == 0) {
 					echo '<h3>No Borrowed Book</h3>';
+					echo 'click book cover thumbnail for book details';
 				} else if (getBorrowedTotal() == 1) {
 					echo '<h3>Borrowed Book</h3>';
+					echo 'click book cover thumbnail for book details';
 				}
 				else {
 					echo '<h3>Borrowed Books</h3>';
+					echo 'click book cover thumbnail for book details';
 				}
 					?>
 			</div>
@@ -201,15 +211,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							$row2 = mysqli_fetch_row($result2);
 
 							echo '<li class="collection-item avatar">
-								<img src="'.$row2['1'].'" alt="" class="circle">
+								<a href="book.php?bookid=' . $row2['0'] . '"><img src="'.$row2['1'].'" alt="" class="circle"></a>
 								<span class="title">'.$row2['2'].'</span>
-								<p>by <b>'.$row2['3'].'</b></p>
+								<p>authored by <b>'.$row2['3'].'</b></p>
+								<p>published by <b>'.$row2['4'].'</b></p>
+								<p>qty <b>'.$row2['6'].'</b></p>
 								<form action="book.php" method="post">
 									<input type="hidden" name="loan_id" value="'.$row1['0'].'">
 									<input type="hidden" name="book_id" value="'.$row1['1'].'">
 										<input type="hidden" name="command" value="kembali">
 										<button class="btn waves-effect waves-light secondary-content" type="submit">Return Book<i class="material-icons right">settings_backup_restore</i></button>
-									</form>
+								</form>
 					</li>';
 						}
 					
