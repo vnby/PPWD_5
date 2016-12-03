@@ -148,9 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper teal lighten-1">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="index.php"><i class="material-icons right">view_module</i>The Library</a></li>
 					<?php
 					if($_SESSION['role'] == 'admin')
-						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
+						echo '<li class="active"><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
 
 					if($_SESSION['role'] == 'user') {
 						echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
@@ -176,6 +177,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		<div class="container">
 		<div class="row">
+			<div class="col s12">
+				<blockquote><h3>Add New Book</h3></blockquote>
+			</div>
 		</div>
 		<div class="row">
 		<form method="post" action="addbook.php" class="col s6 offset-s3">

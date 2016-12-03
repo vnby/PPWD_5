@@ -158,12 +158,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper teal lighten-1">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="index.php"><i class="material-icons right">view_module</i>The Library</a></li>
 					<?php
 					if($_SESSION['role'] == 'admin')
 						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
 
 					if($_SESSION['role'] == 'user') {
-						echo '<li><a href="borrowed.php"><i class="material-icons right">library_books</i>';
+						echo '<li class="active"><a href="borrowed.php"><i class="material-icons right">library_books</i>';
 					
 						$borrowed = getBorrowedTotal();
 						if($borrowed == 0) {
@@ -189,13 +190,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="col s12">
 			<?php
 				if(getBorrowedTotal() == 0) {
-					echo '<blockquote><h3>No Borrowed Book</h3></blockquote>';
+					echo '<blockquote><h3>No Book Borrowed</h3></blockquote>';
 				} else if (getBorrowedTotal() == 1) {
-					echo '<blockquote><h3>Borrowed Book</h3></blockquote>';
+					echo '<blockquote><h3>Book Borrowed</h3></blockquote>';
 					echo 'click book cover thumbnail for book details';
 				}
 				else {
-					echo '<blockquote><h3>Borrowed Books</h3></blockquote>';
+					echo '<blockquote><h3>Books Borrowed</h3></blockquote>';
 					echo 'click book cover thumbnail for book details';
 				}
 					?>

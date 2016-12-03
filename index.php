@@ -160,6 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<div class="nav-wrapper teal lighten-1">
 				<a href="index.php" class="brand-logo">.::Personal Library::.</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li class="active"><a href="index.php"><i class="material-icons right">view_module</i>The Library</a></li>
 					<?php
 					if($_SESSION['role'] == 'admin')
 						echo '<li><a href="addbook.php"><i class="material-icons right">library_books</i>Add New Book</a></li>';
