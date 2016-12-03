@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<ul id="dropdown1" class="dropdown-content">
 		<?php
 
-		if($_SESSION['role'] == 'guest') {
+		if($_SESSION['role'] == "guest") {
 			echo '<li><a href="login.php">Login</a></li>';
 		} else {
 			$role = $_SESSION['role'];
@@ -202,10 +202,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				</div>
 				<div class='card-stacked'>
 					<div class='card-content'>
+						<p>";
+						if($row['6'] <= 5)
+							echo "<span class='new badge red' data-badge-caption='remaining'>".$row['6']."</span></p>";
+						else
+							echo "<span class='new badge' data-badge-caption='remaining'>".$row['6']."</span></p>";
+						echo "<br>
+						<br>
 						<p>".$row['2']."</p>
 						<p>-- by <b>".$row['3']."</b></p>
 						<p>-- published by <b>".$row['4']."</b></p>
-						<p>-- qty <b>".$row['6']."</b></p>
 					</div>
 					<div class='card-action'>";
 						echo "<a href='book.php?bookid=" . $row['0'] . "'>Details</a></br>";
@@ -249,10 +255,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				</div>
 				<div class='card-stacked'>
 					<div class='card-content'>
+						<p>";
+						if($row['6'] <= 5)
+							echo "<span class='new badge red' data-badge-caption='remaining'>".$row['6']."</span></p>";
+						else
+							echo "<span class='new badge' data-badge-caption='remaining'>".$row['6']."</span></p>";
+						echo "<br>
+						<br>
 						<p>".$row['2']."</p>
 						<p>-- by <b>".$row['3']."</b></p>
 						<p>-- published by <b>".$row['4']."</b></p>
-						<p>-- qty <b>".$row['6']."</b></p>
 					</div>
 					<div class='card-action'>";
 						echo "<a href='book.php?bookid=" . $row['0'] . "'>Details</a></br>";

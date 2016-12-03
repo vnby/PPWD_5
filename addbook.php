@@ -130,10 +130,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 	<ul id="dropdown1" class="dropdown-content">
-		<li><a class="btn-flat disabled">Role:</a></li>
-		<li><a class="btn-flat disabled"><?php echo $_SESSION['role'] ?></a></li>
-		<li class="divider"></li>
-		<li><a href="logout.php">Logout</a></li>
+		<?php
+
+		if($_SESSION['role'] == "guest") {
+			echo '<li><a href="login.php">Login</a></li>';
+		} else {
+			$role = $_SESSION['role'];
+			echo '<li><a class="btn-flat disabled">Role:</a></li>
+			<li><a class="btn-flat disabled">'; echo $role; echo '</a></li>
+			<li class="divider"></li>
+			<li><a href="logout.php">Logout</a></li>';
+		}
+		?>
 	</ul>
 	<div class="navbar-fixed">
 		<nav>

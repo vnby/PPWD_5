@@ -204,10 +204,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 
 	<ul id="dropdown1" class="dropdown-content">
-		<li><a class="btn-flat disabled">Role:</a></li>
-		<li><a class="btn-flat disabled"><?php echo $_SESSION['role'] ?></a></li>
-		<li class="divider"></li>
-		<li><a href="logout.php">Logout</a></li>
+		<?php
+
+		if($_SESSION['role'] == "guest") {
+			echo '<li><a href="login.php">Login</a></li>';
+		} else {
+			$role = $_SESSION['role'];
+			echo '<li><a class="btn-flat disabled">Role:</a></li>
+			<li><a class="btn-flat disabled">'; echo $role; echo '</a></li>
+			<li class="divider"></li>
+			<li><a href="logout.php">Logout</a></li>';
+		}
+		?>
 	</ul>
 	<div class="navbar-fixed">
 		<nav>
@@ -256,7 +264,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					echo '
 						<div class="row">
 							<div class="col s12">
-								<h3>Book Details</h3>
+								<blockquote>
+									<h3>Book Details</h3>
+								</blockquote>
 							</div>
 						</div>
 						<div class="row">
@@ -299,14 +309,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 						</div>';
 
-						if(!isset($_SESSION['login_user'])) {
+						if($_SESSION['role'] != 'user') {
 							echo '<div class="row">
 								<div class="col s12">
-									<p>You are not logged in</p>
+									<a href="login.php">Login</a> as <b>user</b> to give review about this book
 								</div>
 								</div>
 							';
-						} else if($_SESSION['role'] == 'user')
+						} else
 							echo '<div class="row">
 							<div class="col s12">
 								<div class="row">
@@ -326,7 +336,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 						echo '<div class="row">
 							<div class="col s12">
-								<h3>Review</h3>
+								<blockquote>
+									<h3>Review</h3>
+								</blockquote>
 								<div class="table-responsive">
 									<table class="table striped centered">
 										<thead>
