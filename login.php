@@ -52,7 +52,7 @@
 
             header("location: index.php");
         } else {
-            $error = "Username atau Password anda salah.";
+            $error = "Username or password is incorrect";
             $_SESSION['invalid'] = $error;
         }
     }
@@ -80,18 +80,24 @@
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
+<script type="text/javascript">
+// Using jQuery.
+
+
+</script>
 
     <body>
      <div class="login">
       <h1>Personal Library</h1>
-      <form action="login.php" method="post">
+      <form id="loginform" action="login.php" method="post">
         <input type="text" id="username" name="username" placeholder="Username" />
         <input type="password" id="password" name="password" placeholder="Password" />
-        <button type="submit" id="submit" name="masuk" class="waves-effect waves-teal btn-flat">Login</button>
+        <a href="javascript: validate();" class="waves-effect waves-light btn">Login</a>
       </form>
       <span name="error" class="error col-sm-offset-4 col-sm-4">
         <?php
         if(isset($_SESSION['invalid'])) {
+            echo "<p></p>";
             echo $_SESSION['invalid'];
             unset($_SESSION['invalid']);
         } else {
@@ -100,5 +106,37 @@
         ?>
     </span>
     </div>
+<script>
+
+//supaya bisa enter di form
+$(function() {
+    $('form').each(function() {
+        $(this).find('input').keypress(function(e) {
+            // Enter pressed?
+            if(e.which == 10 || e.which == 13) {
+                validate();
+            }
+        });
+
+        $(this).find('input[type=submit]').hide();
+    });
+});
+
+//client side validation
+function validate() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+
+    if(username.length == 0 && password.length == 0) {
+        alert("Please enter username and password");
+        return false;
+    } else {
+        $('#loginform').submit();
+
+        return false;
+    }
+}
+</script>
+
     </body>
   </html>

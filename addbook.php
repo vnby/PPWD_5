@@ -77,6 +77,7 @@ function tambahBuku() {
 		header("Location: book.php?bookid=$bookid");
 	} else if($result = mysqli_query($conn, $sql)) {
 		$bookid = $row1['0'] + 1;
+		header("Location: book.php?bookid=$bookid");
 	} else {
 		die("Error: $sql");
 	}
