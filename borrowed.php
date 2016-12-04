@@ -170,10 +170,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						if($borrowed == 0) {
 							echo '(no book borrowed)';
 						} else if(getBorrowedTotal() == 1) {
-							echo $borrowed; echo ' borrowed book';
+							echo $borrowed; echo ' book borrowed';
 						}
 						else {
-							echo $borrowed; echo ' borrowed books';
+							echo $borrowed; echo ' books borrowed';
 						}
 					}
 					?></a></li>
@@ -223,12 +223,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<span class="title">'.$row2['2'].'</span>
 								<p>authored by <b>'.$row2['3'].'</b></p>
 								<p>published by <b>'.$row2['4'].'</b></p>
-								<p>qty <b>'.$row2['6'].'</b></p>
+								<div class="chip"><b>'.$row2['6'].'</b> available</div>
 								<form action="book.php" method="post">
 									<input type="hidden" name="loan_id" value="'.$row1['0'].'">
 									<input type="hidden" name="book_id" value="'.$row1['1'].'">
 										<input type="hidden" name="command" value="kembali">
-										<button class="btn waves-effect waves-light secondary-content" type="submit">Return Book<i class="material-icons right">settings_backup_restore</i></button>
+										<button class="btn waves-effect waves-light secondary-content" type="submit">Return This Book<i class="material-icons right">settings_backup_restore</i></button>
 								</form>
 					</li>';
 						}

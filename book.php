@@ -232,10 +232,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						if($borrowed == 0) {
 							echo '(no book borrowed)';
 						} else if(getBorrowedTotal() == 1) {
-							echo $borrowed; echo ' borrowed book';
+							echo $borrowed; echo ' book borrowed';
 						}
 						else {
-							echo $borrowed; echo ' borrowed books';
+							echo $borrowed; echo ' books borrowed';
 						}
 					}
 					?></a></li>
@@ -253,11 +253,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					$user_id = $_SESSION['user_id'];
 					$conn = connectDB();
 					$sql = "SELECT * FROM book WHERE book_id='$book_id'";
-					/*$sql1 = "SELECT loan_id FROM loan WHERE user_id=$user_id AND book_id=$book_id";*/
 					$sql2 = "SELECT * FROM loan WHERE book_id='$book_id' AND user_id=$user_id";
 					$result = mysqli_query($conn, $sql);
 					$result1 = mysqli_query($conn, $sql2);
-					/*$result2 = mysqli_query($conn, $sql2);*/
 					$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 					$row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC);
 					$count = mysqli_num_rows($result1);
@@ -279,14 +277,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<p><b>Author</b>: '.$row['author'].'</p>
 								<p><b>Publisher</b>: '.$row['publisher'].'</p>
 								<p><b>Description</b>: '.$row['description'].'</p>
-								<p><b>Quantity</b>: '.$row['quantity'].'</p>';
+								<p><b>Quantity</b>: '.$row['quantity'].' available</p>';
 								if($_SESSION['role'] == 'user') {
 									if ($count == 1) {
 										echo '<p><form action="book.php" method="post">
 											<input type="hidden" name="loan_id" value="'.$row1['loan_id'].'">
 											<input type="hidden" name="book_id" value="'.$row1['book_id'].'">
 											<input type="hidden" name="command" value="kembali">
-											<button class="btn waves-effect waves-light" type="submit">Return Book<i class="material-icons right">settings_backup_restore</i></button>
+											<button class="btn waves-effect waves-light" type="submit">Return This Book<i class="material-icons right">settings_backup_restore</i></button>
 										</form></p>';
 									} else {
 										if(!($row['quantity'] <= 0)) {
@@ -373,7 +371,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						</div>
 					';
 				} else {
-					header("Location: index.php");
+					//header("Location: index.php");
+					echo '<p></p>
+					Please return to <a href="index.php">The Library</a>';
 				}
 			 ?>
 	</div>

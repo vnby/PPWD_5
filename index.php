@@ -172,10 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						if($borrowed == 0) {
 							echo '(no book borrowed)';
 						} else if(getBorrowedTotal() == 1) {
-							echo $borrowed; echo ' borrowed book';
+							echo $borrowed; echo ' book borrowed';
 						}
 						else {
-							echo $borrowed; echo ' borrowed books';
+							echo $borrowed; echo ' books borrowed';
 						}
 					}
 					
@@ -205,9 +205,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					<div class='card-content'>
 						<p>";
 						if($row['6'] <= 5)
-							echo "<span class='new badge red' data-badge-caption='remaining'>".$row['6']."</span></p>";
+							echo "<span class='new badge red' data-badge-caption='available'>".$row['6']."</span></p>";
 						else
-							echo "<span class='new badge' data-badge-caption='remaining'>".$row['6']."</span></p>";
+							echo "<span class='new badge' data-badge-caption='available'>".$row['6']."</span></p>";
 						echo "<br>
 						<br>
 						<p>".$row['2']."</p>
@@ -258,9 +258,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					<div class='card-content'>
 						<p>";
 						if($row['6'] <= 5)
-							echo "<span class='new badge red' data-badge-caption='remaining'>".$row['6']."</span></p>";
+							echo "<span class='new badge red' data-badge-caption='available'>".$row['6']."</span></p>";
 						else
-							echo "<span class='new badge' data-badge-caption='remaining'>".$row['6']."</span></p>";
+							echo "<span class='new badge' data-badge-caption='available'>".$row['6']."</span></p>";
 						echo "<br>
 						<br>
 						<p>".$row['2']."</p>
