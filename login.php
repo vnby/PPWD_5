@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+    if($_SESSION['role'] == "admin" || $_SESSION['role'] == "user") {
+        header("Location: index.php");
+    }
+
   function connectDB() {
     $servername = "localhost";
     $username = "root";
@@ -14,8 +20,6 @@
     }
     return $conn;
   }
-
-   session_start();
    
     $db = connectDB();
 

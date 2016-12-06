@@ -1,8 +1,10 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['login_user']) || $_SESSION['role'] == 'user') {
+if(!isset($_SESSION['login_user'])) {
 	header("Location: login.php");
+} else if ($_SESSION['role'] == "user" || $_SESSION['role'] == 'guest') {
+	header("Location: index.php");
 }
 
 function getBorrowedTotal() {

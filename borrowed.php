@@ -3,9 +3,7 @@ session_start();
 
 if(!isset($_SESSION['login_user'])) {
 	header("Location: login.php");
-}
-
-if($_SESSION['role'] == 'admin') {
+} else if($_SESSION['role'] == "admin" || $_SESSION['role'] == "guest") {
 	header("Location: index.php");
 }
 
