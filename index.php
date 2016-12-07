@@ -104,9 +104,6 @@ function selectAllFromTable($table) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
-	} else if($_POST['command'] === 'review') {
-		$review = $_POST['reviewtextarea'];
-		memberiReview($review, $_POST['bookid']);
 	} else if($_POST['command'] === 'kembali') {
 		bukuKembali($_POST['book_id'], $_SESSION['user_id']);
 	} else if($_POST['command'] === 'tambah') {

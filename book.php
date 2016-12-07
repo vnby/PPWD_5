@@ -83,24 +83,6 @@ function bukuKembali($book_id, $user_id) {
 	mysqli_close($conn);
 }
 
-function memberiReview($review, $book_id) {
-	$conn = connectDB();
-
-	$book_id = $book_id;
-	$user_id = $_SESSION['user_id'];
-	$dates = date('Y-m-d');
-	$content = $review;
-	$sql = "INSERT INTO review (book_id, user_id, date, content) VALUES ('$book_id','$user_id', '$dates', '$content')";
-
-	if($result = mysqli_query($conn, $sql)) {
-		echo "Terima kasih telah memberi review:) <br/>";
-		header("Location: book.php?bookid=$book_id");
-	} else {
-		die("Error: $sql");
-	}
-	mysqli_close($conn);
-}
-
 function tambahBuku() {
 	$conn = connectDB();
 	$img_path = $_POST['img_path'];
@@ -167,9 +149,6 @@ function getNameFromID($user_id) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
-	} else if($_POST['command'] === 'review') {
-		$review = $_POST['reviewtextarea'];
-		memberiReview($review, $_POST['bookid']);
 	} else if($_POST['command'] === 'kembali') {
 		bukuKembali($_POST['book_id'], $_SESSION['user_id']);
 	} else if($_POST['command'] === 'tambah') {
@@ -308,10 +287,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 						</div>';
 
-						if($_SESSION['role'] != 'user') {
+						if($_SESSION['role'] == 'guest') {
 							echo '<div class="row">
 								<div class="col s12">
 									<a href="login.php">Login</a> as <b>user</b> to give review about this book
+								</div>
+								</div>
+							';
+						} else if ($_SESSION['role'] == 'admin') {
+							echo '<div class="row">
+								<div class="col s12">
+									<a href="logout.php">Logout</a> as admin and login as <b>user</b> to give review about this book
 								</div>
 								</div>
 							';
@@ -320,14 +306,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							<div class="col s12">
 								<div class="row">
         							<div class="input-field col s12">
-          								<form action="book.php" method="post" name="reviewform" id="reviewforms">
-          									<textarea class="materialize-textarea" id="reviewtextareas" name="reviewtextarea" form="reviewforms"></textarea>
+          									<textarea class="materialize-textarea" id="reviewtextareas" name="reviewtextarea"></textarea>
           									<label for="textarea1">Give your review about this book...</label>
-											<input type="hidden" name="command" value="review">
-											<input type="hidden" name="bookid" value="'.$row['book_id'].'">
-          									<button class="btn waves-effect waves-light" type="submit" name="action" value="sbmit">Submit Review<i class="material-icons right">send</i>
+          									<button class="btn waves-effect waves-light" type="submit" name="action" value="sbmit" id="sendReview">Submit Review<i class="material-icons right">send</i>
  											</button>
-          								</form>
        								</div>
       							</div>
 							</div>
@@ -347,7 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 												<th>Review</th>
 											</tr>
 										</thead>
-										<tbody>';
+										<tbody id="tablebody">';
 											$reviews = selectBookReview($book_id);
 											while($row = mysqli_fetch_row($reviews)) {
 												echo "<tr>";
@@ -371,12 +353,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						</div>
 					';
 				} else {
-					//header("Location: index.php");
 					echo '<p></p>
 					Please return to <a href="index.php">The Library</a>';
 				}
 			 ?>
 	</div>
+	<script type="text/javascript">
+		$('#sendReview').click(function(e) {
+
+			var review = $('#reviewtextareas').val();
+			var bookid = <?php echo $_GET['bookid']; ?>;
+			var user = '<?php echo $_SESSION['login_user']; ?>';
+			var date = '<?php echo date('Y-m-d'); ?>';
+			
+
+			$(document).ready(function() {
+				$.ajax({
+			     type: "POST",
+			     url: "review.php",
+			     data: {reviewtextarea: review, bookid: bookid},
+			     success: function(){
+			     			$('#tablebody').append("<tr><td>" + user + "</td><td>" + date + "</td><td>" + review + "</td></tr>");
+			    		}
+				});
+			});
+		});
+	</script>
 </body>
 </html>
 

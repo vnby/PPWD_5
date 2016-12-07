@@ -48,7 +48,12 @@ function tambahBuku() {
 	$description = $_POST['description'];
 	$quantity = $_POST['quantity'];
 
-	//cek dulu ada buku yg sama ato ga
+	if($quantity <= 0) {
+		echo '<script type="text/javascript">
+			alert("The book quantiy cannot be zero or negative");
+		</script>';
+	} else {
+		//cek dulu ada buku yg sama ato ga
 	$sql3 = "SELECT * FROM book WHERE title='$title'";
     $result3 = mysqli_query($conn,$sql3);
     $row3 = mysqli_fetch_array($result3,MYSQLI_ASSOC);
@@ -84,6 +89,7 @@ function tambahBuku() {
 		die("Error: $sql");
 	}
 	mysqli_close($conn);
+	}
 }
 
 function selectAllFromTable($table) {
@@ -103,8 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
 	} else if($_POST['command'] === 'tambah') {
 		tambahBuku();
-	} else if($_POST['command'] === 'delete') {
-		deletePaket($_POST['userid']);
 	}
 }
 

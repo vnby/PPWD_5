@@ -107,8 +107,6 @@ function getBorrowedTotal() {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if($_POST['command'] === 'pinjam') {
 		pinjamBuku($_POST['book_id'], $_SESSION['user_id']);
-	} else if($_POST['command'] === 'delete') {
-		deletePaket($_POST['userid']);
 	}
 }
 
